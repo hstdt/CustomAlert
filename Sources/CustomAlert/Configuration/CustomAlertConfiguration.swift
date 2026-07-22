@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 /// Configuration values for custom alerts
-@MainActor public struct CustomAlertConfiguration: Sendable {
+public struct CustomAlertConfiguration: Sendable {
     /// The configuration of the alert view
     var alert: Alert
     /// The configuration of the alert buttons
@@ -18,8 +18,8 @@ import SwiftUI
     var background: CustomAlertBackground
     /// The padding around the alert
     var padding: EdgeInsets
-    /// The transition the alert appears with
-    var transition: AnyTransition
+    /// Resolves the transition the alert appears with on the main actor
+    var transition: @MainActor @Sendable () -> AnyTransition
     /// Animate the alert appearance
     var animateTransition: Bool
     /// The vertical alignment of the alert
@@ -38,7 +38,7 @@ import SwiftUI
         button: CustomAlertConfiguration.Button,
         background: CustomAlertBackground,
         padding: EdgeInsets,
-        transition: AnyTransition,
+        transition: @escaping @MainActor @Sendable () -> AnyTransition,
         animateTransition: Bool,
         alignment: VerticalAlignment,
         dismissOnBackgroundTap: Bool
@@ -54,7 +54,7 @@ import SwiftUI
     }
 
     /// The default configuration
-    nonisolated public static var `default`: CustomAlertConfiguration {
+    public static var `default`: CustomAlertConfiguration {
         if #available(iOS 26.0, visionOS 26.0, *) {
             .liquidGlass
         } else {
@@ -121,9 +121,9 @@ import SwiftUI
     }
 
     /// The transition the alert appears with
-    public func transition(_ value: AnyTransition) -> Self {
+    @MainActor public func transition(_ value: AnyTransition) -> Self {
         var configuration = self
-        configuration.transition = value
+        configuration.transition = { value }
         return configuration
     }
 

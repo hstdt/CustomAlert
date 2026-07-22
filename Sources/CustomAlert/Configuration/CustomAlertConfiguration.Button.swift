@@ -71,7 +71,7 @@ extension CustomAlertConfiguration {
         }
 
         /// The default configuration
-        nonisolated public static var `default`: CustomAlertConfiguration.Button {
+        public static var `default`: CustomAlertConfiguration.Button {
             if #available(iOS 26.0, visionOS 26.0, *) {
                 .liquidGlass
             } else {

@@ -25,6 +25,10 @@ let package = Package(
             swiftSettings: [
                 // .define("CUSTOM_ALERT_DESIGN")
             ]
+        ),
+        .testTarget(
+            name: "CustomAlertTests",
+            dependencies: ["CustomAlert"]
         )
     ]
 )

@@ -10,25 +10,23 @@ import SwiftUI
 
 extension CustomAlertConfiguration {
     /// The default configuration for a classic alert
-    nonisolated public static var classic: CustomAlertConfiguration {
-        MainActor.runSync {
-            CustomAlertConfiguration(
-                alert: .classic,
-                button: .classic,
-                background: .color(Color("DimmingBackround", bundle: .module)),
-                padding: EdgeInsets(top: 11, leading: 30, bottom: 11, trailing: 30),
-                transition: .opacity.combined(with: .scale(scale: 1.1)),
-                animateTransition: true,
-                alignment: .center,
-                dismissOnBackgroundTap: false
-            )
-        }
+    public static var classic: CustomAlertConfiguration {
+        CustomAlertConfiguration(
+            alert: .classic,
+            button: .classic,
+            background: .color(Color("DimmingBackround", bundle: .module)),
+            padding: EdgeInsets(top: 11, leading: 30, bottom: 11, trailing: 30),
+            transition: { .opacity.combined(with: .scale(scale: 1.1)) },
+            animateTransition: true,
+            alignment: .center,
+            dismissOnBackgroundTap: false
+        )
     }
 }
 
 extension CustomAlertConfiguration.Alert {
     /// The default configuration for a classic alert
-    nonisolated public static var classic: CustomAlertConfiguration.Alert {
+    public static var classic: CustomAlertConfiguration.Alert {
         CustomAlertConfiguration.Alert(
             background: .blurEffect(.thinMaterial),
             dividerVisibility: .visible,
@@ -90,29 +88,27 @@ extension CustomAlertConfiguration.Alert {
 
 extension CustomAlertConfiguration.Button {
     /// The default configuration for a classic alert
-    nonisolated public static var classic: CustomAlertConfiguration.Button {
-        MainActor.runSync {
-            CustomAlertConfiguration.Button(
-                tintColor: nil,
-                pressedTintColor: nil,
-                roleColor: [.destructive: .red],
-                padding: .dynamic { state in
-                    if state.isAccessibilitySize {
-                        EdgeInsets(top: 20, leading: 12, bottom: 20, trailing: 12)
-                    } else {
-                        EdgeInsets(top: 12, leading: 12, bottom: 12, trailing: 12)
-                    }
-                },
-                font: .body,
-                roleFont: [.cancel: .headline],
-                hideDivider: false,
-                background: .color(.almostClear),
-                pressedBackground: .color(.classicBackgroundColor),
-                roleBackground: [:],
-                spacing: 0,
-                shape: .automatic
-            )
-        }
+    public static var classic: CustomAlertConfiguration.Button {
+        CustomAlertConfiguration.Button(
+            tintColor: nil,
+            pressedTintColor: nil,
+            roleColor: [.destructive: .red],
+            padding: .dynamic { state in
+                if state.isAccessibilitySize {
+                    EdgeInsets(top: 20, leading: 12, bottom: 20, trailing: 12)
+                } else {
+                    EdgeInsets(top: 12, leading: 12, bottom: 12, trailing: 12)
+                }
+            },
+            font: .body,
+            roleFont: [.cancel: .headline],
+            hideDivider: false,
+            background: .color(.almostClear),
+            pressedBackground: .color(.classicBackgroundColor),
+            roleBackground: [:],
+            spacing: 0,
+            shape: .automatic
+        )
     }
 }
 

@@ -144,7 +144,7 @@ import SwiftUI
         .cornerRadius(configuration.alert.cornerRadius)
         .shadow(configuration.alert.shadow)
         .padding(configuration.padding)
-        .transition(configuration.transition)
+        .transition(configuration.transition())
         .animation(.default, value: isPresented)
         .onChange(of: dynamicTypeSize) { _ in
             redrawAlert()
