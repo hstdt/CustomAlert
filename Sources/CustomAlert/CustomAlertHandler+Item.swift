@@ -13,9 +13,8 @@ import WindowKit
 
     @Binding var item: AlertItem?
     let windowScene: UIWindowScene?
-    let alertTitle: () -> Text?
-    @ViewBuilder let alertContent: (AlertItem) -> AlertContent
-    @ActionBuilder let alertActions: (AlertItem) -> [CustomAlertAction]
+    @LatestCustomAlertContent<AlertItem, AlertContent>
+    private var latestContent: LatestCustomAlertContentStorage<AlertItem, AlertContent>
 
     init(
         item: Binding<AlertItem?>,
@@ -26,9 +25,12 @@ import WindowKit
     ) {
         self._item = item
         self.windowScene = windowScene
-        self.alertTitle = alertTitle
-        self.alertContent = alertContent
-        self.alertActions = alertActions
+        self._latestContent = LatestCustomAlertContent(
+            input: item.wrappedValue,
+            alertTitle: alertTitle,
+            alertContent: alertContent,
+            alertActions: alertActions
+        )
     }
 
     func body(content: Content) -> some View {
@@ -46,14 +48,15 @@ import WindowKit
     }
 
     func alert(on windowScene: UIWindowScene) -> some View {
-        alertIdentity
+        let latestContent = self.latestContent
+        return alertIdentity
             .windowCover(item: $item, on: windowScene) { item in
                 CustomAlert(isPresented: isPresented) {
-                    alertTitle()
+                    latestContent.title()
                 } content: {
-                    alertContent(item)
+                    latestContent.content(fallbackInput: item)
                 } actions: {
-                    alertActions(item)
+                    latestContent.actions(fallbackInput: item)
                 }
                 .transformEnvironment(\.self) { environment in
                     environment.isEnabled = true
@@ -73,9 +76,9 @@ import WindowKit
     @ViewBuilder var alertIdentity: some View {
         if let item {
             ZStack {
-                alertTitle()
-                alertContent(item)
-                ForEach(Array(alertActions(item).enumerated()), id: \.offset) { _, action in
+                latestContent.title()
+                latestContent.content(fallbackInput: item)
+                ForEach(Array(latestContent.actions(fallbackInput: item).enumerated()), id: \.offset) { _, action in
                     action
                 }
             }

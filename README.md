@@ -30,18 +30,29 @@ Or more complex layouts
 
 <img src="Sources/CustomAlert/Documentation.docc/Resources/Complex.png" width="300">
 
-The API is very similar to the SwiftUI Alerts
+The API is very similar to SwiftUI alerts. Model-driven presentation is recommended so the
+alert is only presented after all of its content is available.
 
 ```swift
-.customAlert("Some Fancy Alert", isPresented: $showAlert) {
-    Text("I'm a custom Message")
+struct FancyAlert: Identifiable {
+    let id = UUID()
+    let message: String
+}
+
+@State private var fancyAlert: FancyAlert?
+
+// Present only after the complete payload is ready.
+fancyAlert = FancyAlert(message: "I'm a custom Message")
+
+.customAlert("Some Fancy Alert", item: $fancyAlert) { alert in
+    Text(alert.message)
         .font(.custom("Noteworthy", size: 24))
     Image(systemName: "swift")
         .resizable()
         .scaledToFit()
         .frame(maxHeight: 100)
         .foregroundColor(.blue)
-} actions: {
+} actions: { _ in
     Button {
         // some Action
     } label: {
@@ -59,9 +70,9 @@ The API is very similar to the SwiftUI Alerts
 You can create Side by Side Buttons using `ActionHStack`
 
 ```swift
-.customAlert("Alert with Side by Side Buttons", isPresented: $showAlert) {
+.customAlert("Alert with Side by Side Buttons", item: $fancyAlert) { _ in
     Text("Choose left or right")
-} actions: {
+} actions: { _ in
     ActionHStack {
         Button {
             // some Action
@@ -77,6 +88,9 @@ You can create Side by Side Buttons using `ActionHStack`
     }
 }
 ```
+
+The Boolean `isPresented:` overloads remain available for source compatibility, but are
+deprecated. Use `item:` whenever the alert reads dynamic presentation data.
 
 The alert is customizable via the `Environment`
 

@@ -12,15 +12,15 @@ struct ContentView: View {
         NavigationView {
             List {
                 SimpleAlerts()
-                
+
                 ScrollContentAlerts()
-                
+
                 InputAlerts()
-                
+
                 MultiButtonAlerts()
-                
+
                 OtherAlerts()
-                
+
                 CustomAlerts()
             }
             .navigationTitle("Custom Alert")

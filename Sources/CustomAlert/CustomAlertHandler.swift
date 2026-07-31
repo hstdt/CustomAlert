@@ -13,9 +13,8 @@ import WindowKit
 
     @Binding var isPresented: Bool
     let windowScene: UIWindowScene?
-    let alertTitle: () -> Text?
-    @ViewBuilder let alertContent: () -> AlertContent
-    @ActionBuilder let alertActions: () -> [CustomAlertAction]
+    @LatestCustomAlertContent<Void, AlertContent>
+    private var latestContent: LatestCustomAlertContentStorage<Void, AlertContent>
 
     init(
         isPresented: Binding<Bool>,
@@ -26,9 +25,12 @@ import WindowKit
     ) {
         self._isPresented = isPresented
         self.windowScene = windowScene
-        self.alertTitle = alertTitle
-        self.alertContent = alertContent
-        self.alertActions = alertActions
+        self._latestContent = LatestCustomAlertContent(
+            input: (),
+            alertTitle: alertTitle,
+            alertContent: { _ in alertContent() },
+            alertActions: { _ in alertActions() }
+        )
     }
 
     func body(content: Content) -> some View {
@@ -46,14 +48,15 @@ import WindowKit
     }
 
     func alert(on windowScene: UIWindowScene) -> some View {
-        alertIdentity
+        let latestContent = self.latestContent
+        return alertIdentity
             .windowCover(isPresented: $isPresented, on: windowScene) {
                 CustomAlert(isPresented: $isPresented) {
-                    alertTitle()
+                    latestContent.title()
                 } content: {
-                    alertContent()
+                    latestContent.content(fallbackInput: ())
                 } actions: {
-                    alertActions()
+                    latestContent.actions(fallbackInput: ())
                 }
                 .transformEnvironment(\.self) { environment in
                     environment.isEnabled = true
@@ -72,9 +75,9 @@ import WindowKit
     /// When attached to the content of the represeting view, any changes here will propagate to the content of the window which hosts the alert.
     @ViewBuilder var alertIdentity: some View {
         ZStack {
-            alertTitle()
-            alertContent()
-            ForEach(Array(alertActions().enumerated()), id: \.offset) { _, action in
+            latestContent.title()
+            latestContent.content(fallbackInput: ())
+            ForEach(Array(latestContent.actions(fallbackInput: ()).enumerated()), id: \.offset) { _, action in
                 action
             }
         }

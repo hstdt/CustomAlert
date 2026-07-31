@@ -10,6 +10,7 @@ import WindowKit
 
 // MARK: - Default API
 
+@available(*, deprecated, message: "Use customAlert(item:) when alert content depends on presentation data.")
 public extension View {
     /// Presents an alert when a given condition is true, using an optional text view for
     /// the title.
@@ -118,6 +119,7 @@ public extension View {
 
 // MARK: - WindowScene API
 
+@available(*, deprecated, message: "Use customAlert(item:) when alert content depends on presentation data.")
 public extension View {
     /// Presents an alert when a given condition is true, using an optional text view for
     /// the title.
@@ -226,6 +228,7 @@ public extension View {
 
 // MARK: - Convenience API
 
+@available(*, deprecated, message: "Use customAlert(item:) when alert content depends on presentation data.")
 public extension View {
     /// Presents an alert when a given condition is true, using an optional text view for
     /// the title.
